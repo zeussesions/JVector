@@ -127,13 +127,13 @@ public class JVector {
         }
     }
 
-    public double cross(JVector v1) {
-        if (zAxis) {
-            return this.x * v1.x - this.y * v1.y - this.z * v1.z;
-        } else {
-            return this.x * v1.x - this.y * v1.y;
-        }
+    public JVector cross(JVector v) {
+        double x = this.y * v.z - this.z * v.y;
+        double y = this.z * v.x - this.x * v.z;
+        double z = this.x * v.y - this.y * v.x;
+        return new JVector(x, y, z);
     }
+
 
     public double dist(JVector v1) {
         if (zAxis) {
@@ -285,7 +285,13 @@ public class JVector {
         double dotmag = this.dot(v) / (this.mag() * v.mag());
         double angle;
         angle = Math.acos(Math.min(1, Math.max(-1, dotmag)));
-        angle = angle * sign(this.cross(v).z || 1);
+        angle = angle * Math.signum(this.cross(v).z) < 1 ? 1 : -1;
         return angle;
+    }
+
+    public void lerp(JVector v, double amt) {
+        this.x += (v.x - this.x) * amt;
+        this.y += (v.y - this.y) * amt;
+        this.z += (v.z - this.z) * amt;
     }
 }
